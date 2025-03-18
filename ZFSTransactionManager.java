@@ -81,14 +81,8 @@ public class ZFSTransactionManager {
 
     private String computeFileHash(Path file) throws IOException, NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-
-        // Dateiinhalt lesen und normalisieren (z. B. Leerzeichen und Zeilenumbrüche entfernen)
-        String content = Files.readString(file, StandardCharsets.UTF_8)
-                .replaceAll("\\s+", " ") // Ersetzt mehrere Leerzeichen/Zeilenumbrüche durch ein einzelnes
-                .trim();
-
-        byte[] hash = digest.digest(content.getBytes(StandardCharsets.UTF_8));
-
+        byte[] bytes = Files.readAllBytes(file);
+        byte[] hash = digest.digest(bytes);
         StringBuilder hexString = new StringBuilder();
         for (byte b : hash) {
             hexString.append(String.format("%02x", b));
